@@ -28,3 +28,6 @@ jobs:
 
       - name: Run tests
         run: npx jest --ci
+
+      - name: Validate HTML
+        run: npm run validate:html

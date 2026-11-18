@@ -1,0 +1,8 @@
+{
+  "extends": ["html-validate:standard", "html-validate:a11y"],
+  "rules": {
+    "no-missing-references": "error",
+    "prefer-native-element": "off",
+    "aria-label-misuse": "off"
+  }
+}

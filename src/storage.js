@@ -1,7 +1,12 @@
 // storage.js - localStorage utilities for game data persistence
 import { isObjectiveKey } from './gameState.js';
+import { LEVELS } from './levels.js';
+import { BOARD_SIZE, SYMBOLS, INITIAL_LIVES } from './constants.js';
 
 export const STORAGE_KEY = 'musicalMatchSaga';
+// Kept apart from the game save so it survives a new game and doesn't
+// trigger the "changed in another tab" warning.
+const TIMER_MODE_KEY = 'musicalMatchSaga.timerMode';
 
 function readStore() {
   try {
@@ -103,4 +108,52 @@ export function clearGameProgress() {
     return writeStore(parsed);
   }
   return false;
+}
+
+function isNumberAtLeastZero(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+}
+
+function isWholeNumberInRange(value, min, max) {
+  return Number.isInteger(value) && value >= min && value <= max;
+}
+
+// True if boardState is BOARD_SIZE rows of BOARD_SIZE entries, each a symbol
+// from SYMBOLS or ''.
+export function isValidBoardState(boardState) {
+  return (
+    Array.isArray(boardState) &&
+    boardState.length === BOARD_SIZE &&
+    boardState.every(
+      (row) =>
+        Array.isArray(row) &&
+        row.length === BOARD_SIZE &&
+        row.every((cell) => cell === '' || SYMBOLS.includes(cell))
+    )
+  );
+}
+
+// True if everything in a save except the board is usable.
+export function isValidSaveExceptBoard(save) {
+  if (!save || typeof save !== 'object' || Array.isArray(save)) return false;
+
+  if (!isWholeNumberInRange(save.level, 1, LEVELS.length)) return false;
+  if (!isWholeNumberInRange(save.lives, 1, INITIAL_LIVES)) return false;
+  for (const field of ['movesLeft', 'timer', 'score', 'totalScore']) {
+    if (!isNumberAtLeastZero(save[field])) return false;
+  }
+
+  const objectives = save.objectives;
+  if (!objectives || typeof objectives !== 'object' || Array.isArray(objectives)) return false;
+  const expectedKeys = (LEVELS[save.level - 1].objectives || []).map((o) => o.label + 'Left');
+  const savedKeys = Object.keys(objectives);
+  if (savedKeys.length !== expectedKeys.length) return false;
+  return expectedKeys.every(
+    (key) => Object.prototype.hasOwnProperty.call(objectives, key) && isNumberAtLeastZero(objectives[key])
+  );
+}
+
+// True if the whole save, including the board, is usable.
+export function isValidSave(save) {
+  return isValidSaveExceptBoard(save) && isValidBoardState(save.boardState);
 }

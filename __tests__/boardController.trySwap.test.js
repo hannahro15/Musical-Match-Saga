@@ -83,6 +83,7 @@ describe('trySwap', () => {
       isResolving: false,
       levelComplete: false,
       timerActive: true,
+      timerMode: 'normal',
       movesLeft: 5,
       timer: 30,
       level: 1,
@@ -159,6 +160,22 @@ describe('trySwap', () => {
     gameState.timerActive = false;
     await trySwap(sourceCell, targetCell);
     expect(boardMock.findMatches).not.toHaveBeenCalled();
+  });
+
+  test('with no timer, running out of moves still loses the level', async () => {
+    gameState.timerMode = 'off';
+    gameState.timer = 0;
+    gameState.movesLeft = 1;
+    const group = [sourceCell, targetCell, makeCell('🎻')];
+    boardMock.findMatches
+      .mockReturnValueOnce([group])
+      .mockReturnValueOnce([group])
+      .mockReturnValueOnce([]);
+
+    await trySwap(sourceCell, targetCell);
+
+    expect(gameState.movesLeft).toBe(0);
+    expect(levelOutcomesMock.handleLevelLose).toHaveBeenCalled();
   });
 
   test('calls handleLevelWin when all objectives reach zero', async () => {

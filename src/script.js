@@ -15,10 +15,11 @@ import {
   goHome,
   restartGameFromBeginning,
   handleSavedGameChangedElsewhere,
+  setTimerMode,
   useThisTab,
   leaveForOtherTab
 } from './gameController.js';
-import { STORAGE_KEY } from './storage.js';
+import { STORAGE_KEY, getTimerMode } from './storage.js';
 
 
 /* -----------------------------------
@@ -184,6 +185,15 @@ function init() {
   });
 
   bindEvents();
+
+  // Timer setting (separate from the saved game)
+  setTimerMode(getTimerMode());
+  const timerSelect = document.getElementById('timerModeSelect');
+  if (timerSelect) {
+    timerSelect.value = gameState.timerMode;
+    timerSelect.addEventListener('change', () => setTimerMode(timerSelect.value));
+  }
+
   showMenu();
 
   // key is null when another tab clears all of localStorage

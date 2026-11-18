@@ -28,6 +28,9 @@ jest.mock('../src/storage.js', () => ({
   clearGameProgress: jest.fn(),
   saveGameProgress: jest.fn(),
   canSave: jest.fn(() => true),
+  // Real validators, so continueGame's handling of bad saves is tested for real.
+  isValidSaveExceptBoard: jest.requireActual('../src/storage.js').isValidSaveExceptBoard,
+  isValidBoardState: jest.requireActual('../src/storage.js').isValidBoardState,
 }));
 
 jest.mock('../src/board.js', () => ({
@@ -75,9 +78,10 @@ jest.mock('../src/levelOutcomes.js', () => ({
 import * as storageMock from '../src/storage.js';
 import * as boardMock from '../src/board.js';
 import * as timerMock from '../src/timer.js';
+import * as levelOutcomesMock from '../src/levelOutcomes.js';
 import { LEVELS as mockLevels } from '../src/levels.js';
 import { gameState } from '../src/gameState.js';
-import { INITIAL_LIVES } from '../src/constants.js';
+import { INITIAL_LIVES, BOARD_SIZE, SYMBOLS } from '../src/constants.js';
 import * as dom from '../src/domElements.js';
 import {
   resetGame,
@@ -92,6 +96,10 @@ import {
   useThisTab,
   leaveForOtherTab,
 } from '../src/gameController.js';
+
+function validBoard(symbol = SYMBOLS[0]) {
+  return Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(symbol));
+}
 
 function el(startHidden = false) {
   const e = document.createElement('div');
@@ -144,6 +152,7 @@ describe('gameController flow', () => {
       timer: 0,
       timerInterval: null,
       timerActive: false,
+      timerMode: 'normal',
       lives: INITIAL_LIVES,
       draggedCell: null,
       touchStartCell: null,
@@ -185,6 +194,47 @@ describe('gameController flow', () => {
     expect(gameState.alphaLeft).toBe(2);
     expect(dom.levelDisplay.textContent).toBe('LEVEL 1');
     expect(boardMock.generateGameBoard).toHaveBeenCalled();
+    expect(timerMock.startTimer).toHaveBeenCalled();
+  });
+
+  test('startLevel with Extra time doubles the level timer', () => {
+    gameState.timerMode = 'extra';
+    startLevel(1);
+    expect(gameState.timer).toBe(mockLevels[0].timer * 2);
+    expect(timerMock.startTimer).toHaveBeenCalled();
+    expect(dom.timerDisplay.classList.contains('hidden')).toBe(false);
+  });
+
+  test('startLevel with No timer hides the timer and never starts it', () => {
+    gameState.timerMode = 'off';
+    startLevel(1);
+    expect(gameState.timer).toBe(0);
+    expect(gameState.timerActive).toBe(true); // the player can still move
+    expect(timerMock.startTimer).not.toHaveBeenCalled();
+    expect(dom.timerDisplay.classList.contains('hidden')).toBe(true);
+    expect(levelOutcomesMock.handleLevelLose).not.toHaveBeenCalled();
+  });
+
+  test('continueGame with No timer does not start the timer', () => {
+    gameState.timerMode = 'off';
+    storageMock.loadGameProgress.mockReturnValueOnce({
+      level: 1, lives: 3, score: 0, totalScore: 0, movesLeft: 8, timer: 20,
+      objectives: { alphaLeft: 2 }, boardState: [],
+    });
+    continueGame();
+    expect(timerMock.startTimer).not.toHaveBeenCalled();
+    expect(gameState.timerActive).toBe(true);
+    expect(dom.timerDisplay.classList.contains('hidden')).toBe(true);
+  });
+
+  test('continueGame gives a level saved with no timer its full time once the timer is back on', () => {
+    gameState.timerMode = 'normal';
+    storageMock.loadGameProgress.mockReturnValueOnce({
+      level: 1, lives: 3, score: 0, totalScore: 0, movesLeft: 8, timer: 0,
+      objectives: { alphaLeft: 2 }, boardState: [],
+    });
+    continueGame();
+    expect(gameState.timer).toBe(mockLevels[0].timer);
     expect(timerMock.startTimer).toHaveBeenCalled();
   });
 
@@ -255,6 +305,52 @@ describe('gameController flow', () => {
     expect(storageMock.clearGameProgress).toHaveBeenCalled();
   });
 
+  const goodSave = () => ({
+    level: 2,
+    lives: 2,
+    score: 40,
+    totalScore: 100,
+    movesLeft: 5,
+    timer: 20,
+    objectives: { betaLeft: 1 },
+    boardState: validBoard(),
+  });
+
+  test.each([
+    ['lives is missing', (s) => { delete s.lives; }],
+    ['lives is a string', (s) => { s.lives = '5'; }],
+    ['lives is too high', (s) => { s.lives = INITIAL_LIVES + 1; }],
+    ['level is 99', (s) => { s.level = 99; }],
+    ['movesLeft is negative', (s) => { s.movesLeft = -1; }],
+    ['timer is not a number', (s) => { s.timer = NaN; }],
+    ['objectives do not match the level', (s) => { s.objectives = { alphaLeft: 1 }; }],
+    ['objectives are missing', (s) => { delete s.objectives; }],
+  ])('continueGame starts a new game and says so when %s', (_name, damage) => {
+    const save = goodSave();
+    damage(save);
+    storageMock.loadGameProgress.mockReturnValueOnce(save);
+    continueGame();
+    expect(gameState.level).toBe(1);
+    expect(gameState.lives).toBe(INITIAL_LIVES);
+    expect(storageMock.clearGameProgress).toHaveBeenCalled();
+  });
+
+  test.each([
+    ['the wrong size', [['🎻', '🎹'], ['🎷', '🎺']]],
+    ['an unknown symbol', (() => { const b = validBoard(); b[3][3] = 'X'; return b; })()],
+    ['not an array', 'nope'],
+  ])('continueGame keeps the progress and makes a fresh board when the board is %s', (_name, board) => {
+    const save = goodSave();
+    save.boardState = board;
+    storageMock.loadGameProgress.mockReturnValueOnce(save);
+    continueGame();
+    expect(gameState.level).toBe(2);
+    expect(gameState.lives).toBe(2);
+    expect(gameState.totalScore).toBe(100);
+    expect(storageMock.clearGameProgress).not.toHaveBeenCalled();
+    expect(boardMock.generateGameBoard).toHaveBeenCalled();
+  });
+
   test('continueGame recreates the board from saved cell content instead of generating a new one', () => {
     storageMock.loadGameProgress.mockReturnValueOnce({
       level: 1,
@@ -263,13 +359,13 @@ describe('gameController flow', () => {
       totalScore: 10,
       movesLeft: 8,
       timer: 0,
-      objectives: {},
-      boardState: [['A', 'B'], ['', 'C']],
+      objectives: { alphaLeft: 2 },
+      boardState: validBoard('🎻'),
     });
     continueGame();
     expect(boardMock.generateGameBoard).not.toHaveBeenCalled();
-    expect(dom.gameBoard.children.length).toBe(4);
-    expect(dom.gameBoard.children[0].textContent).toBe('A');
+    expect(dom.gameBoard.children.length).toBe(BOARD_SIZE * BOARD_SIZE);
+    expect(dom.gameBoard.children[0].textContent).toBe('🎻');
     // Saved timer is 0, so the timer should not restart.
     expect(timerMock.startTimer).not.toHaveBeenCalled();
   });

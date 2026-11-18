@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="Musical Match Saga - A Music-Themed Match-3 Puzzle Game">
     <meta name="description" content="Musical Match Saga is a fun and engaging music-themed match-three puzzle game. Swap musical symbols to create matches, complete objectives, and advance through levels filled with musical challenges. Perfect for casual gamers and music lovers alike!">
@@ -54,14 +55,22 @@
         <!-- HOME BOTTOM — scores and buttons -->
         <div class="home-bottom">
              <div class="score-group">
-                <div id="highScoreDisplay" class="high-score hidden" aria-live="polite" aria-label="High score">Best Score: 0</div>
-                <div id="highestLevelDisplay" class="highest-level hidden" aria-live="polite" aria-label="Highest level">Highest Level: 0</div>
+                <div id="highScoreDisplay" class="high-score hidden" aria-live="polite">Best Score: 0</div>
+                <div id="highestLevelDisplay" class="highest-level hidden" aria-live="polite">Highest Level: 0</div>
             </div>
             <div class="menu hidden" role="navigation" aria-label="Main Menu">
                 <button type="button" id="playBtn"><span class="menu-icon" aria-hidden="true">🎮</span>Play Game</button>
                 <button type="button" id="continueBtn" class="hidden"><span class="continue-icon" aria-hidden="true">▶️</span>Continue Your Adventure</button>
                 <button type="button" id="howToPlayBtn"><span class="menu-icon" aria-hidden="true">ℹ️</span>How to Play</button>
                 <button type="button" id="restartGameBtn" class="hidden"><span class="menu-icon" aria-hidden="true">🔄</span>Restart Game</button>
+            </div>
+            <div class="timer-setting">
+                <label for="timerModeSelect">Level timer</label>
+                <select id="timerModeSelect">
+                    <option value="normal">Normal</option>
+                    <option value="extra">Extra time (x2)</option>
+                    <option value="off">No timer</option>
+                </select>
             </div>
             <p id="storageNotice" class="storage-notice hidden" role="status">Your browser is blocking storage, so your progress and best score won't be saved.</p>
         </div>
@@ -70,17 +79,17 @@
         <div id="game-board-container" class="hidden">
             <div id="score-moves-wrapper">
                 <div class="top-bar-custom">
-                    <div id="levelDisplay" class="hidden level-center" aria-live="polite" aria-label="Current level">LEVEL 1</div>
-                    <div id="livesDisplay" aria-live="polite" aria-label="Lives remaining"><span id="livesCount">5</span></div>
-                    <button type="button" id="homeBtn" class="hidden home-btn"><span aria-hidden="true">🏠</span> Home</button>
+                    <div id="levelDisplay" class="hidden level-center" aria-live="polite">LEVEL 1</div>
+                    <div id="livesDisplay" aria-live="polite"><span id="livesCount">5</span></div>
+                    <button id="homeBtn" class="hidden home-btn"><span aria-hidden="true">🏠</span> Home</button>
                 </div>
                 <div id="objective-counters" aria-label="Objectives"></div>
                 <div class="moves-score-timer-row">
-                    <div id="movesDisplay" class="hidden moves-horizontal" aria-live="polite" aria-label="Moves remaining">Moves: 0</div>
-                    <div id="scoreDisplay" class="hidden score-horizontal" aria-live="polite" aria-label="Current score">Score: 0</div>
-                    <div id="timerDisplay" class="hidden timer-horizontal" aria-live="polite" aria-label="Timer">Time: 0s</div>
+                    <div id="movesDisplay" class="hidden moves-horizontal" aria-live="polite">Moves: 0</div>
+                    <div id="scoreDisplay" class="hidden score-horizontal" aria-live="polite">Score: 0</div>
+                    <div id="timerDisplay" class="hidden timer-horizontal" aria-live="polite">Time: 0s</div>
                 </div>
-                <div id="totalScoreDisplay" class="hidden total-score" aria-live="polite" aria-label="Total score">Total Score: 0</div>
+                <div id="totalScoreDisplay" class="hidden total-score" aria-live="polite">Total Score: 0</div>
             </div>
             <div id="game-board-wrapper">
                 <div id="gameBoard" role="grid" aria-label="Game board"></div>
@@ -93,8 +102,8 @@
                 <button type="button" id="closeRestartModal" class="close" aria-label="Close">&times;</button>
                 <h2>Restart Level?</h2>
                 <p>Are you sure you want to restart this level?</p>
-                <button type="button" id="confirmRestartBtn" aria-label="Yes, Restart">Yes, Restart</button>
-                <button type="button" id="cancelRestartBtn" aria-label="Cancel">Cancel</button>
+                <button id="confirmRestartBtn">Yes, Restart</button>
+                <button id="cancelRestartBtn">Cancel</button>
             </div>
         </div>
 
@@ -105,8 +114,8 @@
                 <h2>Level Complete!</h2>
                 <p>Congratulations! Ready for the next challenge?</p>
                 <p id="levelBonus" class="level-bonus"></p>
-                <button type="button" id="confirmNextLevelBtn" aria-label="Next Level">Next Level</button>
-                <button type="button" id="cancelNextLevelBtn" aria-label="Cancel">Cancel</button>
+                <button id="confirmNextLevelBtn">Next Level</button>
+                <button id="cancelNextLevelBtn">Cancel</button>
             </div>
         </div>
 
@@ -117,8 +126,8 @@
                 <p>You've run out of lives!</p>
                 <p id="gameOverFinalScore" style="font-size: 1.3em; font-weight: 600; color: #6c5ce7; margin: 15px 0;">Total Score: 0</p>
                 <p id="gameOverNewBest" class="new-best hidden">New best score!</p>
-                <button type="button" id="gameOverPlayAgainBtn" aria-label="Play Again">Play Again</button>
-                <button type="button" id="gameOverHomeBtn" aria-label="Home">Home</button>
+                <button id="gameOverPlayAgainBtn">Play Again</button>
+                <button id="gameOverHomeBtn">Home</button>
             </div>
         </div>
 
@@ -131,8 +140,8 @@
                 <p id="congratsBonus" class="level-bonus"></p>
                 <p id="congratsNewBest" class="new-best hidden">New best score!</p>
                 <p>Would you like to play again or go back to the home screen?</p>
-                <button type="button" id="congratsPlayAgainBtn" aria-label="Play Again">Play Again</button>
-                <button type="button" id="congratsHomeBtn" aria-label="Home">Home</button>
+                <button id="congratsPlayAgainBtn">Play Again</button>
+                <button id="congratsHomeBtn">Home</button>
             </div>
         </div>
 
@@ -146,6 +155,7 @@
                     <li><strong><span aria-hidden="true">🎮</span> Swap adjacent tiles</strong> to make a match of 3 or more.</li>
                     <li><strong><span aria-hidden="true">📱</span> Tap a tile, then tap an adjacent one</strong> to swap them — or swipe a tile in the direction you want it to move.</li>
                     <li><strong><span aria-hidden="true">🎯</span> Complete the level objectives</strong> shown above the board before you run out of moves or time.</li>
+                    <li><strong><span aria-hidden="true">⏱️</span> Need more time?</strong> Use the Level timer setting on the home screen to double the time or turn the timer off. With no timer, a level is only lost by running out of moves, and there is no time bonus.</li>
                     <li><strong><span aria-hidden="true">🎼</span> Each level is different</strong> and may ask you to collect specific instruments.</li>
                     <li><strong><span aria-hidden="true">🏆</span> Bigger matches score more</strong>, and combos or chain reactions give bonus points.</li>
                     <li><strong><span aria-hidden="true">💡</span> Plan carefully</strong> and use your moves wisely to build your best score.</li>
@@ -160,8 +170,8 @@
                 <button type="button" id="closeConfirmHomeModal" class="close" aria-label="Close">&times;</button>
                 <h2 id="confirmHomeTitle">Return to Home?</h2>
                 <p>Are you sure you want to save the game and return later?</p>
-                <button type="button" id="confirmHomeBtn" aria-label="Yes, Save and Return">Yes, Save and Return</button>
-                <button type="button" id="cancelHomeBtn" aria-label="Cancel">Cancel</button>
+                <button id="confirmHomeBtn">Yes, Save and Return</button>
+                <button id="cancelHomeBtn">Cancel</button>
             </div>
         </div>
 
@@ -170,14 +180,14 @@
             <div class="modal-content" style="text-align:center;">
                 <h2 id="otherTabTitle">Game changed in another tab</h2>
                 <p>This game was changed in another tab.</p>
-                <button type="button" id="otherTabUseThisBtn" aria-label="Use this tab">Use this tab</button>
-                <button type="button" id="otherTabGoHomeBtn" aria-label="Go home">Go home</button>
+                <button id="otherTabUseThisBtn">Use this tab</button>
+                <button id="otherTabGoHomeBtn">Go home</button>
             </div>
         </div>
 
     </div>
     <footer class="site-footer" style="text-align:center; padding:16px 0; color:#666;">
-        <a href="privacy.html">Privacy Policy</a>
+        <a href="privacy.html">Privacy Policy</a> · <a href="accessibility.html">Accessibility Statement</a>
     </footer>
     <div id="saveFailedNotice" class="save-failed-notice hidden" aria-hidden="true">Couldn't save your progress. Your browser may be blocking storage.</div>
     <div id="sr-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>

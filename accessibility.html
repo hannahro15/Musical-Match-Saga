@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Accessibility Statement — Musical Match Saga</title>
+  <meta name="description" content="What the Musical Match Saga web game does for accessibility, its known problems and how to report a new one." />
+  <link rel="canonical" href="https://hannahro15.github.io/Musical-Match-Saga/accessibility.html" />
+  <meta name="theme-color" content="#6c5ce7" />
+  <link rel="stylesheet" href="styles/accessibility.css" />
+</head>
+<body>
+  <header>
+    <h1>Accessibility Statement</h1>
+    <p>Last updated: 18 November 2026</p>
+  </header>
+
+  <section>
+    <p>This statement describes the accessibility of the Musical Match Saga web game. The aim is for the game to meet the <a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) 2.2</a> at level AA.</p>
+    <p><strong>In short: the game has not been formally tested for accessibility, and it does not yet meet WCAG 2.2 AA. Some accessibility features are built in, and there are known problems that are still being worked on.</strong></p>
+  </section>
+
+  <h2>What the game includes</h2>
+  <ul>
+    <li><strong>Keyboard play:</strong> the buttons and the board tiles can be reached with the Tab key, and a focused tile can be selected and swapped with Enter or Space. The game also works with a mouse and touch.</li>
+    <li><strong>Screen reader announcements:</strong> the game announces matches, combos, level results and some other changes through a live region, and each tile has a label giving its symbol, row and column.</li>
+    <li><strong>Reduced motion:</strong> animations and transitions are shortened when your device is set to reduce motion.</li>
+    <li><strong>Decorative emoji:</strong> emoji used only for decoration are hidden from screen readers.</li>
+    <li><strong>Without JavaScript:</strong> the game needs JavaScript. If it is turned off, the page shows a message saying so.</li>
+  </ul>
+
+  <h2>What has been tested</h2>
+  <p>No formal accessibility testing has been done. The game has not been tested with a defined set of browsers and assistive technologies, and has not been audited against WCAG 2.2. A manual check with a keyboard and screen readers is planned, tracked in <a href="https://github.com/hannahro15/Musical-Match-Saga/issues/60">issue 60</a>. This page will be updated with the results when they are available.</p>
+
+  <h2>Known problems</h2>
+  <p>Known accessibility problems are tracked as open issues with the <a href="https://github.com/hannahro15/Musical-Match-Saga/issues?q=is%3Aissue%20is%3Aopen%20label%3Aaccessibility"><code>accessibility</code> label</a> on GitHub. They include, for example, that you cannot yet move between tiles with the arrow keys, keyboard focus is not yet kept inside open dialogs, and screen readers may announce more than is needed during play. That list is the most up-to-date source.</p>
+
+  <h2>Report a problem</h2>
+  <p>If you find something that does not work for you, please <a href="https://github.com/hannahro15/Musical-Match-Saga/issues/new">open an issue</a> on the project's GitHub repository. It helps to say what device, browser and assistive technology you use, what you tried and what happened.</p>
+
+  <footer>
+    <p>Made by Hannah Olbrich.</p>
+    <p><a href="index.html">Return to the game</a> · <a href="privacy.html">Privacy Policy</a></p>
+  </footer>
+</body>
+</html>

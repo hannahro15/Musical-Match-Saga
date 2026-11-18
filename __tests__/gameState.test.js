@@ -105,6 +105,22 @@ describe('gameState', () => {
     expect(gameState.timerActive).toBe(true);
   });
 
+  test('resetGameState gives each timer mode the right starting time', () => {
+    const config = { moves: 20, objectives: [], timer: 60 };
+    gameState.timerMode = 'normal';
+    resetGameState(config);
+    expect(gameState.timer).toBe(60);
+    gameState.timerMode = 'extra';
+    resetGameState(config);
+    expect(gameState.timer).toBe(120);
+    gameState.timerMode = 'off';
+    resetGameState(config);
+    expect(gameState.timer).toBe(0);
+    // Still true: it also lets the player move
+    expect(gameState.timerActive).toBe(true);
+    gameState.timerMode = 'normal';
+  });
+
   test ('resetGameState removes old objective counters', () => {
     gameState.redLeft = 10;
     gameState.blueLeft = 5;

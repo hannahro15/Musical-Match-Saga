@@ -72,6 +72,7 @@ On top of that:
 - Screen reader support, including announcements for matches and level results. Accessibility is a priority and still being improved: see the issues labelled [`accessibility`](https://github.com/hannahro15/Musical-Match-Saga/issues?q=is%3Aissue%20is%3Aopen%20label%3Aaccessibility)
 - Respects the reduced-motion setting on your device
 - No accounts, ads or tracking: see the [privacy policy](privacy.html)
+- An [accessibility statement](accessibility.html) says what has and hasn't been checked
 
 ---
 
@@ -160,6 +161,7 @@ Musical-Match-Saga/
 │
 ├── index.html                    # the game page
 ├── privacy.html                  # privacy policy (no data collected; progress stays in your browser)
+├── accessibility.html            # accessibility statement
 ├── manifest.json                 # web app manifest (name, icons, theme colour)
 ├── .babelrc                      # Babel config so Jest can run ES modules
 ├── eslint.config.js              # linting rules

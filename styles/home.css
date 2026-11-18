@@ -577,3 +577,19 @@ h1 {
   font-size: 0.95rem;
   z-index: 1000;
 }
+
+.timer-setting {
+  max-width: 320px;
+  margin: 16px auto 0;
+  padding: 0 12px;
+  text-align: center;
+}
+
+.timer-setting label {
+  margin-right: 8px;
+}
+
+.timer-setting select {
+  font: inherit;
+  padding: 4px 8px;
+}

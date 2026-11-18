@@ -52,7 +52,7 @@ jobs:
       - name: Collect site files
         run: |
           mkdir _site
-          cp -r index.html privacy.html manifest.json src styles images _site/
+          cp -r index.html privacy.html accessibility.html manifest.json src styles images _site/
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3

@@ -54,6 +54,23 @@ describe('levelOutcomes', () => {
     expect(document.getElementById('levelBonus').textContent).toContain('Time left: 23s × 2 = +46');
   });
 
+  test('handleLevelWin gives no time bonus when the timer is off', () => {
+    document.body.innerHTML = '<div id="nextLevelModal" class="hidden"></div><p id="levelBonus"></p>';
+    gameState.timerMode = 'off';
+    gameState.movesLeft = 4;
+    gameState.timer = 23; // should be ignored
+    gameState.score = 100;
+    gameState.totalScore = 300;
+
+    handleLevelWin();
+    gameState.timerMode = 'normal';
+
+    expect(gameState.score).toBe(180);
+    expect(gameState.totalScore).toBe(380);
+    expect(document.getElementById('levelBonus').textContent).toContain('Moves left: 4 × 20 = +80');
+    expect(document.getElementById('levelBonus').textContent).not.toContain('Time left');
+  });
+
   test('handleLevelWin shows congratulations modal on the final level', () => {
     gameState.level = LEVELS.length;
     // totalScore is kept live in sync with score during play, so it already

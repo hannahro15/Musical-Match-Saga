@@ -1,5 +1,5 @@
 // gameState.js - Handles game state object and state-reset logic
-import { INITIAL_LIVES } from './constants.js';
+import { INITIAL_LIVES, TIMER_MODES } from './constants.js';
 
 export let gameState = {
   movesLeft: 0,
@@ -11,6 +11,7 @@ export let gameState = {
   timer: 0,
   timerInterval: null,
   timerActive: false,
+  timerMode: 'normal',
   lives: INITIAL_LIVES,
   draggedCell: null,
   touchStartCell: null,
@@ -41,7 +42,10 @@ export function resetGameState(config) {
     });
   }
   gameState.levelComplete = false;
-  gameState.timer = config.timer;
+  // 'off' has no countdown; timerActive stays true because it also lets the
+  // player move.
+  const factor = (TIMER_MODES[gameState.timerMode] || TIMER_MODES.normal).factor;
+  gameState.timer = config.timer * factor;
   gameState.timerActive = true;
 }
 

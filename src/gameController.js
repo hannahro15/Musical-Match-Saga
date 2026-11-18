@@ -10,14 +10,14 @@ import {
   updateTotalScoreDisplay,
   updateHighScoreDisplay
 } from './ui.js';
-import { getHighScore, saveHighScore, getHighestLevel, saveHighestLevel, loadGameProgress, clearGameProgress, saveGameProgress, canSave } from './storage.js';
+import { getHighScore, saveHighScore, getHighestLevel, saveHighestLevel, loadGameProgress, clearGameProgress, saveGameProgress, canSave, isValidSaveExceptBoard, isValidBoardState } from './storage.js';
 import {
   getSafeSymbol,
   hasPossibleMoves,
   generateGameBoard,
   updateCellClass
 } from './board.js';
-import { BOARD_SIZE, SYMBOLS, INITIAL_LIVES } from './constants.js';
+import { BOARD_SIZE, SYMBOLS, INITIAL_LIVES, TIMER_MODES } from './constants.js';
 import { gameState, isObjectiveKey, setSelectedCell, resetGameState } from './gameState.js';
 import { handleLevelLose } from './levelOutcomes.js';
 import { setGameBoardRef, boardEventHandlers } from './boardEventHandlers.js';
@@ -108,7 +108,11 @@ export function showGameUI() {
   showElement(dom.levelDisplay);
   showElement(dom.movesDisplay);
   showElement(dom.scoreDisplay);
-  showElement(dom.timerDisplay);
+  if (gameState.timerMode === 'off') {
+    hideElement(dom.timerDisplay);
+  } else {
+    showElement(dom.timerDisplay);
+  }
   showElement(dom.livesDisplay);
   showElement(dom.objectiveCounters);
   showElement(dom.totalScoreDisplay);
@@ -169,7 +173,7 @@ export function useThisTab() {
   autoSaveProgress();
   if (timerWasActive) {
     gameState.timerActive = true;
-    startTimer(
+    if (gameState.timerMode !== 'off') startTimer(
       gameState,
       dom.timerDisplay,
       () => handleLevelLose(dom.restartLevelModal, dom.confirmRestartBtn, dom.confirmNextLevelBtn)
@@ -185,6 +189,17 @@ export function leaveForOtherTab() {
   stopTimer(gameState);
   // Keep the other tab's save: do not auto-save here
   showMenu();
+}
+
+/* -----------------------------------
+   TIMER SETTING
+----------------------------------- */
+
+// Applies to the next level that starts (or is continued), not the one in play.
+export function setTimerMode(mode) {
+  if (!Object.prototype.hasOwnProperty.call(TIMER_MODES, mode)) return;
+  gameState.timerMode = mode;
+  saveTimerMode(mode);
 }
 
 /* -----------------------------------
@@ -317,7 +332,17 @@ export function continueGame() {
     startGame();
     return;
   }
-  
+
+  // A damaged or outdated save must never break the game
+  if (!isValidSaveExceptBoard(savedProgress)) {
+    startGame();
+    announce("Your saved game couldn't be loaded, so a new game was started.");
+    return;
+  }
+
+  // Only the board is bad: keep the progress and make a fresh board
+  const boardState = isValidBoardState(savedProgress.boardState) ? savedProgress.boardState : null;
+
   // Restore game state
   gameState.level = savedProgress.level;
   gameState.lives = savedProgress.lives;
@@ -348,13 +373,23 @@ export function continueGame() {
   }
   
   // Restore board state
-  restoreBoardState(savedProgress.boardState);
+  restoreBoardState(boardState);
   
   // Update UI
   renderLevel(config);
   
   // Start timer if needed
-  if (config.timer && savedProgress.timer > 0) {
+  if (gameState.timerMode === 'off') {
+    // No timer: the level is only lost by running out of moves
+    gameState.timer = 0;
+    gameState.timerActive = true;
+    return;
+  }
+  if (config.timer && gameState.timer <= 0) {
+    // Saved while the timer was off: give the level its full time
+    gameState.timer = config.timer * TIMER_MODES[gameState.timerMode].factor;
+  }
+  if (config.timer && gameState.timer > 0) {
     gameState.timerActive = true;
     startTimer(
       gameState,
@@ -430,6 +465,13 @@ export function startLevel(levelNumber) {
   renderLevel(config);
   generateBoard();
 
+  if (gameState.timerMode === 'off') {
+    // No timer: hide it and don't start it
+    stopTimer(gameState);
+    hideElement(dom.timerDisplay);
+    return;
+  }
+  showElement(dom.timerDisplay);
   startTimer(
     gameState,
     dom.timerDisplay,

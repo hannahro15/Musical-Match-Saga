@@ -62,7 +62,7 @@ export async function trySwap(sourceCell, targetCell) {
     return;
   }
 
-  if (gameState.movesLeft <= 0 && !gameState.levelComplete && gameState.timer > 0) {
+  if (gameState.movesLeft <= 0 && !gameState.levelComplete && (gameState.timerMode === 'off' || gameState.timer > 0)) {
     // Show lose modal immediately if out of moves and not a win
     await import('./levelOutcomes.js').then(({ handleLevelLose }) => {
       // Always use confirmRestartBtn and confirmNextLevelBtn

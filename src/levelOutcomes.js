@@ -17,7 +17,9 @@ function toggleNewBest(id, isNewBest) {
 // returns a short text describing the bonus for the result modal.
 function applyWinBonus() {
     const movesLeft = Math.max(0, Number(gameState.movesLeft) || 0);
-    const timeLeft = Math.max(0, Number(gameState.timer) || 0);
+    // No time bonus when the timer is off
+    const timerOff = gameState.timerMode === 'off';
+    const timeLeft = timerOff ? 0 : Math.max(0, Number(gameState.timer) || 0);
     const moveBonus = movesLeft * MOVE_BONUS;
     const timeBonus = timeLeft * TIME_BONUS;
     const total = moveBonus + timeBonus;
@@ -32,8 +34,8 @@ function applyWinBonus() {
     return {
         total,
         spoken: total > 0 ? ' ' : '',
-        text: `Moves left: ${movesLeft} × ${MOVE_BONUS} = +${formatScore(moveBonus)}. ` +
-            `Time left: ${timeLeft}s × ${TIME_BONUS} = +${formatScore(timeBonus)}.`
+        text: `Moves left: ${movesLeft} × ${MOVE_BONUS} = +${formatScore(moveBonus)}.` +
+            (timerOff ? '' : ` Time left: ${timeLeft}s × ${TIME_BONUS} = +${formatScore(timeBonus)}.`)
     };
 }
 

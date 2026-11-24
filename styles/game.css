@@ -22,8 +22,8 @@
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(7, 1fr);
   gap: 4px;
-  width: min(90vw, 90vh, 420px);
-  height: min(90vw, 90vh, 420px);
+  width: clamp(280px, min(92vw, calc(100dvh - 220px)), 640px);
+  height: clamp(280px, min(92vw, calc(100dvh - 220px)), 640px);
   margin: 30px auto 25px auto;
   padding: 0;
   position: relative;

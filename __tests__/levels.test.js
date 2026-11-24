@@ -3,6 +3,7 @@
 import { LEVELS, getLevelConfig } from '../src/levels.js';
 import { checkWinCondition } from '../src/boardController.js';
 import { gameState } from '../src/gameState.js';
+import { SYMBOLS, SYMBOL_TO_CLASS, SYMBOL_TO_LABEL } from '../src/constants.js';
 
 describe('LEVELS', () => {
 
@@ -18,6 +19,22 @@ describe('LEVELS', () => {
     });
   });
 
+
+  test('every level config is valid', () => {
+    LEVELS.forEach((level, index) => {
+      expect(Number.isInteger(level.moves) && level.moves > 0).toBe(true);
+      expect(Number.isInteger(level.timer) && level.timer > 0).toBe(true);
+      const seen = new Set();
+      level.objectives.forEach((objective) => {
+        expect(SYMBOLS).toContain(objective.symbol);
+        expect(SYMBOL_TO_CLASS[objective.symbol]).toBeTruthy();
+        expect(objective.label).toBe(SYMBOL_TO_LABEL[objective.symbol]);
+        expect(Number.isInteger(objective.count) && objective.count >= 1).toBe(true);
+        expect(seen.has(objective.symbol)).toBe(false);
+        seen.add(objective.symbol);
+      });
+    });
+  });
 
   test('LEVELS has unique objectives for each level', () => {
     const objectiveSets = LEVELS.map(level => JSON.stringify(level.objectives));

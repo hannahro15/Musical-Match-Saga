@@ -14,6 +14,15 @@ export const TIMER_MODES = {
 };
 export const DEFAULT_TIMER_MODE = 'normal';
 
+export const SYMBOL_TO_LABEL = {
+  '🎻': 'violin',
+  '🎹': 'piano',
+  '🎺': 'trumpet',
+  '🥁': 'drum',
+  '🎷': 'saxophone',
+  '🎵': 'musicalNote'
+};
+
 export const SYMBOL_TO_CLASS = {
   '🎻': 'cell-violin',
   '🎹': 'cell-piano',

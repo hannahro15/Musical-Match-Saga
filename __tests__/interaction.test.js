@@ -8,6 +8,7 @@ import { gameState, setDraggedCell, setTouchStartCell, setTouchStartX, setTouchS
 beforeEach(() => {
   // Reset gameState and related variables before each test
   gameState.isResolving = false;
+  gameState.levelComplete = false;
   setDraggedCell(null);
   setTouchStartCell(null);
   setTouchStartX(null);
@@ -328,6 +329,18 @@ describe('handleCellActivate', () => {
 
     expect(cell.classList.contains('selected')).toBe(true);
     expect(gameState.selectedCell).toBe(cell);
+  });
+
+  test('ignores taps after the level has ended', async () => {
+    gameState.levelComplete = true;
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    const setSelected = jest.fn();
+
+    await handleCellActivate({ currentTarget: cell }, gameState, setSelected, jest.fn(), jest.fn());
+
+    expect(cell.classList.contains('selected')).toBe(false);
+    expect(setSelected).not.toHaveBeenCalled();
   });
 
   test('deselects a cell when tapped again', async () => {

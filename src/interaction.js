@@ -114,7 +114,7 @@ export async function handleTouchEnd(
  * @param {Function} trySwap
  */
 export async function handleCellActivate(event, gameState, setSelectedCell, areAdjacent, trySwap) {
-    if (gameState.isResolving) return;
+    if (gameState.isResolving || gameState.levelComplete) return;
     const cell = event.currentTarget;
     if (!cell?.classList?.contains('cell')) return;
 

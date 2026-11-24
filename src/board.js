@@ -49,7 +49,6 @@ export function getCellGrid(gameBoard, BOARD_SIZE) {
 export function findMatches(gameBoard, BOARD_SIZE) {
   const grid = getCellGrid(gameBoard, BOARD_SIZE);
   const matchedGroups = [];
-  const visited = new Set();
   function scanLineForMatches(line) {
     let startIndex = 0;
     while (startIndex <= line.length - 3) {
@@ -57,16 +56,9 @@ export function findMatches(gameBoard, BOARD_SIZE) {
       if (!symbol) { startIndex++; continue; }
       let endIndex = startIndex + 1;
       while (endIndex < line.length && line[endIndex].textContent === symbol) endIndex++;
-      if (endIndex - startIndex >= 3) {
-        const group = [];
-        for (let i = startIndex; i < endIndex; i++) {
-          if (!visited.has(line[i])) {
-            group.push(line[i]);
-            visited.add(line[i]);
-          }
-        }
-        if (group.length > 0) matchedGroups.push(group);
-      }
+      // Each straight line scores on its own. A row and a column may share a
+      // tile; it belongs to both groups rather than being removed from one.
+      if (endIndex - startIndex >= 3) matchedGroups.push(line.slice(startIndex, endIndex));
       startIndex = endIndex;
     }
   }

@@ -186,3 +186,24 @@ describe('reshuffleBoard', () => {
     }).not.toThrow();
   });
 });
+
+describe('straight-line matches', () => {
+  test('a row and a column that share a tile both count in full', () => {
+    const gameBoard = document.createElement('div');
+    for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+      const cell = document.createElement('div');
+      cell.textContent = String.fromCharCode(65 + (i % 5));
+      gameBoard.appendChild(cell);
+    }
+    const cells = [...gameBoard.children];
+    [0, 1, 2].forEach((col) => { cells[col].textContent = 'X'; });
+    [0, BOARD_SIZE, BOARD_SIZE * 2].forEach((row) => { cells[row].textContent = 'X'; });
+
+    const matches = findMatches(gameBoard, BOARD_SIZE);
+
+    expect(matches).toHaveLength(2);
+    expect(matches.map((group) => group.length).sort()).toEqual([3, 3]);
+    expect(matches[0]).toContain(cells[0]);
+    expect(matches[1]).toContain(cells[0]);
+  });
+});

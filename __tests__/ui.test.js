@@ -107,7 +107,7 @@ describe('UI functions', () => {
   test('updateTimerDisplay updates the timer display element correctly', () => {
     const timerDisplay = document.createElement('div');
     updateTimerDisplay(timerDisplay, 30);
-    expect(timerDisplay.textContent).toBe('Time: 30s');
+    expect(timerDisplay.textContent).toBe('Time: 0:30');
   });
   
   test('showMenuPage shows menu elements and hides game elements', () => {

@@ -10,6 +10,19 @@ export function formatScore(n) {
   return n.toLocaleString('en-GB');
 }
 
+/**
+ * Formats a count of seconds as minutes and seconds, e.g. 90 -> "1:30" and
+ * 5 -> "0:05". Negative or non-numeric input is treated as zero.
+ * @param {number} seconds
+ * @returns {string}
+ */
+export function formatTime(seconds) {
+  const total = Math.max(0, Math.floor(Number(seconds) || 0));
+  const minutes = Math.floor(total / 60);
+  const rest = total % 60;
+  return `${minutes}:${String(rest).padStart(2, '0')}`;
+}
+
 export function showElement(element) {
   if (element) {
     element.classList.remove('hidden');

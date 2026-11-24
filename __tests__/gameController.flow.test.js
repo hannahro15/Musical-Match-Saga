@@ -64,7 +64,7 @@ jest.mock('../src/ui.js', () => ({
   // Real implementation so timer-display assertions reflect actual DOM behavior.
   updateTimerDisplay: (timerDisplay, timer) => {
     if (!timerDisplay) return;
-    timerDisplay.textContent = `Time: ${timer}s`;
+    timerDisplay.textContent = `Time: ${Math.floor(timer / 60)}:${String(timer % 60).padStart(2, '0')}`;
     if (timerDisplay.classList) {
       timerDisplay.classList.toggle('low-time', timer <= 10 && timer > 0);
     }
@@ -84,6 +84,7 @@ jest.mock('../src/levelOutcomes.js', () => ({
 }));
 
 import * as storageMock from '../src/storage.js';
+import * as utils from '../src/utils.js';
 import * as boardMock from '../src/board.js';
 import * as timerMock from '../src/timer.js';
 import * as levelOutcomesMock from '../src/levelOutcomes.js';
@@ -444,15 +445,15 @@ describe('gameController flow', () => {
   describe('timer display is set as soon as a level starts', () => {
     test('startLevel shows the full level time before the first tick, with no low-time style', () => {
       startLevel(1);
-      expect(dom.timerDisplay.textContent).toBe(`Time: ${mockLevels[0].timer}s`);
+      expect(dom.timerDisplay.textContent).toBe(`Time: ${utils.formatTime(mockLevels[0].timer)}`);
       expect(dom.timerDisplay.classList.contains('low-time')).toBe(false);
     });
 
     test('a new level clears a stale low-time display left by the previous level', () => {
-      dom.timerDisplay.textContent = 'Time: 6s';
+      dom.timerDisplay.textContent = 'Time: 0:06';
       dom.timerDisplay.classList.add('low-time');
       startLevel(2);
-      expect(dom.timerDisplay.textContent).toBe(`Time: ${mockLevels[1].timer}s`);
+      expect(dom.timerDisplay.textContent).toBe(`Time: ${utils.formatTime(mockLevels[1].timer)}`);
       expect(dom.timerDisplay.classList.contains('low-time')).toBe(false);
     });
 
@@ -462,7 +463,7 @@ describe('gameController flow', () => {
         objectives: { alphaLeft: 2 }, boardState: [],
       });
       continueGame();
-      expect(dom.timerDisplay.textContent).toBe('Time: 15s');
+      expect(dom.timerDisplay.textContent).toBe('Time: 0:15');
       expect(dom.timerDisplay.classList.contains('low-time')).toBe(false);
     });
 
@@ -473,7 +474,7 @@ describe('gameController flow', () => {
       });
       continueGame();
       expect(gameState.timer).toBe(mockLevels[0].timer);
-      expect(dom.timerDisplay.textContent).toBe(`Time: ${mockLevels[0].timer}s`);
+      expect(dom.timerDisplay.textContent).toBe(`Time: ${utils.formatTime(mockLevels[0].timer)}`);
     });
   });
 

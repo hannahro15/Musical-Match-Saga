@@ -1,4 +1,4 @@
-import { showElement, hideElement, announce, formatScore } from '../src/utils.js';
+import { showElement, hideElement, announce, formatScore, formatTime } from '../src/utils.js';
 
 describe('utils', () => {
   test('showElement removes hidden class', () => {
@@ -20,6 +20,17 @@ describe('utils', () => {
 
   test('hideElement does nothing if element is null', () => {
     expect(() => hideElement(null)).not.toThrow();
+  });
+});
+
+describe('formatTime', () => {
+  test('formats seconds as minutes and seconds', () => {
+    expect(formatTime(90)).toBe('1:30');
+    expect(formatTime(5)).toBe('0:05');
+    expect(formatTime(180)).toBe('3:00');
+    expect(formatTime(0)).toBe('0:00');
+    expect(formatTime(-4)).toBe('0:00');
+    expect(formatTime(undefined)).toBe('0:00');
   });
 });
 

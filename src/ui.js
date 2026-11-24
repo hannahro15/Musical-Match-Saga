@@ -1,4 +1,4 @@
-import { formatScore } from './utils.js';
+import { formatScore, formatTime } from './utils.js';
 
 export function showMenuPage(heading, subtitle, menu, gameBoard, movesDisplay, scoreDisplay, timerDisplay, livesDisplay, restartContainer) {
   const elementsToShow = [heading, subtitle, menu];
@@ -62,7 +62,7 @@ export function updateObjectiveCounters(objectiveCountersContainer, objectives, 
 export function updateTimerDisplay(timerDisplay, timer) {
   if (!timerDisplay) return;
 
-  timerDisplay.textContent = `Time: ${timer}s`;
+  timerDisplay.textContent = `Time: ${formatTime(timer)}`;
   if (timerDisplay.classList) {
     timerDisplay.classList.toggle('low-time', timer <= 10 && timer > 0);
   }

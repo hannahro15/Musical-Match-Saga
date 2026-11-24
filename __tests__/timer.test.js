@@ -28,7 +28,7 @@ describe('timer', () => {
     startTimer(gameState, timerDisplay, () => {});
     setTimeout(() => {
       expect(gameState.timer).toBe(1);
-      expect(timerDisplay.textContent).toBe('Time: 1s');
+      expect(timerDisplay.textContent).toBe('Time: 0:01');
       done();
     }, 1100);
   });
@@ -42,7 +42,7 @@ describe('timer', () => {
     startTimer(gameState, timerDisplay, handleLevelLose);
     setTimeout(() => {
       expect(handleLevelLose).toHaveBeenCalled();
-      expect(timerDisplay.textContent).toBe('Time: 0s');
+      expect(timerDisplay.textContent).toBe('Time: 0:00');
       done();
     }, 1100);
   });
@@ -54,7 +54,7 @@ describe('timer', () => {
     startTimer(gameState, timerDisplay, () => {});
     setTimeout(() => {
       expect(gameState.timer).toBe(0);
-      expect(timerDisplay.textContent).toBe('Time: 0s');
+      expect(timerDisplay.textContent).toBe('Time: 0:00');
       done();
     }, 1100);
   });
@@ -68,7 +68,7 @@ describe('timer', () => {
     startTimer(gameState, timerDisplay, handleLevelLose);
     setTimeout(() => {
       expect(handleLevelLose).not.toHaveBeenCalled();
-      expect(timerDisplay.textContent).toBe('Time: 0s');
+      expect(timerDisplay.textContent).toBe('Time: 0:00');
       done();
     }, 1100);
   });
@@ -86,7 +86,7 @@ describe('timer', () => {
     gameState.timer = 2;
     startTimer(gameState, timerDisplay, () => {});
     setTimeout(() => {
-      expect(timerDisplay.textContent).toBe('Time: 1s');
+      expect(timerDisplay.textContent).toBe('Time: 0:01');
       done();
     }, 1100);
   });

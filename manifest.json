@@ -1,7 +1,7 @@
 {
   "name": "Musical Match Saga",
-  "short_name": "MatchSaga",
-  "description": "A musical match-3 puzzle game blending rhythm and strategy.",
+  "short_name": "Match Saga",
+  "description": "A music-themed match-3 puzzle game: swap instruments, complete objectives and beat 20 levels.",
   "lang": "en-US",
   "start_url": "./index.html",
   "scope": "./",

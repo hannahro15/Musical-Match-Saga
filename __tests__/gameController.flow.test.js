@@ -261,6 +261,8 @@ describe('gameController flow', () => {
     expect(storageMock.clearGameProgress).toHaveBeenCalled();
     expect(gameState.level).toBe(1);
     expect(dom.gameBoardContainer.classList.contains('hidden')).toBe(false);
+    expect(dom.container.classList.contains('game-active')).toBe(true);
+    expect(dom.container.classList.contains('home-active')).toBe(false);
   });
 
   test('restartGameFromBeginning clears progress then starts a new game', () => {

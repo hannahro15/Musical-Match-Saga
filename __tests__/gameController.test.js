@@ -82,6 +82,7 @@ describe('gameController', () => {
   test('removes game-active class from container', () => {
     showMenu();
     expect(dom.container.classList.remove).toHaveBeenCalledWith('game-active');
+    expect(dom.container.classList.add).toHaveBeenCalledWith('home-active');
   });
 
   test('sets highScoreDisplay textContent', () => {

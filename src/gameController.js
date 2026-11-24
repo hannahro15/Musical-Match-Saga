@@ -32,6 +32,7 @@ import * as dom from './domElements.js';
 ----------------------------------- */
 
 export function showMenu() {
+  dom.container?.classList.add('home-active');
   dom.container?.classList.remove('game-active');
   dom.heading?.classList.remove('sr-only');
   showMenuPage(
@@ -96,6 +97,7 @@ export function showMenu() {
 }
 
 export function showGameUI() {
+  dom.container?.classList.remove('home-active');
   dom.container?.classList.add('game-active');
   dom.heading?.classList.add('sr-only');
   hideElement(dom.subtitle);

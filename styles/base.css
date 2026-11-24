@@ -89,3 +89,7 @@ a:focus {
     }
 }
 
+/* The game view covers the page; the footer underneath must not take focus. */
+body.game-playing .site-footer {
+  visibility: hidden;
+}

@@ -103,33 +103,69 @@ export function getSafeSymbol(grid, row, col, SYMBOLS) {
  * @param {Function} wireUpCellEvents
  */
 export function generateGameBoard(gameBoard, BOARD_SIZE, SYMBOLS, getSafeSymbol, hasPossibleMoves, wireUpCellEvents) {
+  // A dead board leaves the player unable to move or lose, so try far more
+  // random boards than a normal game needs, then fall back to a known move.
+  const ATTEMPT_LIMIT = 1000;
   let attempts = 0;
   let hasMove;
   do {
-    gameBoard.innerHTML = '';
-    const grid = Array.from({ length: BOARD_SIZE }, () => []);
-    for (let row = 0; row < BOARD_SIZE; row++) {
-      for (let col = 0; col < BOARD_SIZE; col++) {
-        const symbol = getSafeSymbol(grid, row, col, SYMBOLS);
-        grid[row][col] = symbol;
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.textContent = symbol;
-        updateCellClass(cell);
-        cell.draggable = true;
-        cell.tabIndex = 0;
-        cell.setAttribute('role', 'button');
-        cell.setAttribute('aria-label', `Game tile: ${symbol}, row ${row + 1}, column ${col + 1}`);
-        gameBoard.appendChild(cell);
+    renderBoard(gameBoard, () => {
+      const grid = Array.from({ length: BOARD_SIZE }, () => []);
+      for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+          grid[row][col] = getSafeSymbol(grid, row, col, SYMBOLS);
+        }
       }
-    }
-    // Check for at least one possible move
+      return grid.flat();
+    }, BOARD_SIZE);
     hasMove = hasPossibleMoves(gameBoard, BOARD_SIZE);
     attempts++;
-  } while (!hasMove && attempts < 20);
+  } while (!hasMove && attempts < ATTEMPT_LIMIT);
+
+  if (!hasMove) {
+    // Deterministic fallback: the first row is A A B A, so swapping B with A
+    // makes three in a row. Other rows use a cyclic pattern that cannot create
+    // a match on its own.
+    renderBoard(gameBoard, () => {
+      const symbols = SYMBOLS.length ? SYMBOLS : ['?'];
+      const a = symbols[0];
+      const b = symbols[1] || a;
+      return Array.from({ length: BOARD_SIZE * BOARD_SIZE }, (_, index) => {
+        const row = Math.floor(index / BOARD_SIZE);
+        const col = index % BOARD_SIZE;
+        if (row === 0) {
+          if (col === 0 || col === 1 || col === 3) return a;
+          if (col === 2) return b;
+        }
+        return symbols[index % symbols.length];
+      });
+    }, BOARD_SIZE);
+  }
+
   // Always re-attach listeners after board generation
   if (typeof wireUpCellEvents === 'function') {
     wireUpCellEvents();
+  }
+}
+
+// Replaces the board with one cell per symbol. `symbolsAt` returns the flat
+// list, so the random and fallback paths share the DOM code.
+function renderBoard(gameBoard, symbolsAt, BOARD_SIZE) {
+  gameBoard.innerHTML = '';
+  const symbols = symbolsAt();
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const symbol = symbols[row * BOARD_SIZE + col];
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.textContent = symbol;
+      updateCellClass(cell);
+      cell.draggable = true;
+      cell.tabIndex = 0;
+      cell.setAttribute('role', 'button');
+      cell.setAttribute('aria-label', `Game tile: ${symbol}, row ${row + 1}, column ${col + 1}`);
+      gameBoard.appendChild(cell);
+    }
   }
 }
 

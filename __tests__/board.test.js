@@ -77,6 +77,16 @@ describe('board', () => {
     expect(hasPossibleMoves(gameBoard, BOARD_SIZE)).toBe(false);
   }); 
 
+  test('generateGameBoard falls back to a board with a possible move', () => {
+    const gameBoard = document.createElement('div');
+    const noMoves = jest.fn(() => false);
+
+    generateGameBoard(gameBoard, BOARD_SIZE, SYMBOLS, getSafeSymbol, noMoves, () => {});
+
+    expect(noMoves).toHaveBeenCalledTimes(1000);
+    expect(hasPossibleMoves(gameBoard, BOARD_SIZE)).toBe(true);
+  });
+
   test('board rendering and cell classes are correct after generateGameBoard', () => {
     const gameBoard = document.createElement('div');
     generateGameBoard(gameBoard, BOARD_SIZE, SYMBOLS, getSafeSymbol, hasPossibleMoves, () => {});

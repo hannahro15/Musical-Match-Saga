@@ -483,7 +483,7 @@ export function startLevel(levelNumber) {
 }
 
 function renderLevel(config) {
-  dom.levelDisplay.textContent = 'Level ' + gameState.level;
+  dom.levelDisplay.textContent = 'Level ' + gameState.level + ' of ' + LEVELS.length;
 
   updateTimerDisplay(dom.timerDisplay, gameState.timer);
   updateMovesDisplay(dom.movesDisplay, gameState.movesLeft);

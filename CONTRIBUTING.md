@@ -25,9 +25,10 @@ The required GitHub check is **Tests pass**. It succeeds only when tests pass on
    git clone https://github.com/<your-username>/Musical-Match-Saga.git
    cd Musical-Match-Saga
    ```
-2. Install the dependencies:
+2. Select the Node.js version the project expects, then install the exact dependency tree:
    ```bash
-   npm install
+   nvm use        # or: fnm use
+   npm ci
    ```
    Please use npm rather than yarn or pnpm, so `package-lock.json` stays the only lockfile.
 3. Start a local web server:

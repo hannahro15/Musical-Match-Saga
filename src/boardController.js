@@ -269,6 +269,9 @@ function showScorePopup(points, cells, type = 'score', comboLevel = 1) {
 
   const popup = document.createElement('div');
   popup.className = `score-popup${type === 'combo' ? ' combo-popup' : ''}`;
+  // The same gain is announced through the live region; keep the sticker out
+  // of the accessibility tree so it is not read as board content.
+  popup.setAttribute('aria-hidden', 'true');
   popup.textContent = type === 'combo'
     ? `Combo x${comboLevel} +${points}`
     : `+${points}`;

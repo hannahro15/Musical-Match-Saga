@@ -156,6 +156,7 @@ describe('showScorePopup', () => {
         showScorePopup(10, [cell]);
         expect(gameBoard.querySelector('.score-popup')).not.toBeNull();
         expect(gameBoard.querySelector('.score-popup').textContent).toBe('+10');
+        expect(gameBoard.querySelector('.score-popup').getAttribute('aria-hidden')).toBe('true');
     });
 
     test('renders a combo popup with the combo label', () => {

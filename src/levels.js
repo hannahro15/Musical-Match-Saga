@@ -65,7 +65,7 @@ export const LEVELS = [
     timer: 70,
   },
 
-  // Level 7: Three objectives, lower moves, timer getting tighter
+  // Level 7: Three objectives, more moves than level 6, shorter timer
   {
     moves: 22,
     objectives: [
@@ -181,7 +181,7 @@ export const LEVELS = [
     timer: 75,
   },
 
-  // Level 17: Four objectives, tighter, high counts
+  // Level 17: Four objectives, more moves and higher counts than level 16, same timer
   {
     moves: 32,
     objectives: [

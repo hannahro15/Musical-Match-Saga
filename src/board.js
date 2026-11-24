@@ -161,7 +161,9 @@ export function hasPossibleMoves(gameBoard, BOARD_SIZE) {
 
 
 /**
- * Reshuffles the board if no moves are possible, or after matches are cleared.
+ * Shuffles the tiles until `hasPossibleMoves` is true (or the attempt cap is
+ * reached). It does not decide when to run; the caller calls it when the board
+ * has no possible moves.
  * @param {HTMLElement} gameBoard
  * @param {number} BOARD_SIZE
  * @param {string[]} SYMBOLS

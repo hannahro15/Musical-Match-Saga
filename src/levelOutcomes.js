@@ -33,7 +33,7 @@ function applyWinBonus() {
 
     return {
         total,
-        spoken: total > 0 ? ' ' : '',
+        hasBonus: total > 0,
         text: `Moves left: ${movesLeft} × ${MOVE_BONUS} = +${formatScore(moveBonus)}.` +
             (timerOff ? '' : ` Time left: ${timeLeft}s × ${TIME_BONUS} = +${formatScore(timeBonus)}.`)
     };
@@ -50,6 +50,7 @@ export function handleLevelWin() {
     stopTimer(gameState);
     const isFinalLevel = gameState.level >= LEVELS.length;
     const bonus = applyWinBonus();
+    const bonusAnnouncement = bonus.hasBonus && bonus.text ? ` ${bonus.text}` : '';
 
     if (isFinalLevel) {
         // gameState.totalScore is already kept live in sync with each
@@ -71,8 +72,8 @@ export function handleLevelWin() {
         toggleNewBest('congratsNewBest', isNewBest);
         if (congratsModal) congratsModal.classList.remove('hidden');
         announce(isNewBest
-            ? `Congratulations! You completed all levels.${bonus.spoken}${bonus.spoken && bonus.text} New best score: ${formatScore(finalScore)}!`
-            : `Congratulations! You completed all levels with a total score of ${formatScore(finalScore)}.${bonus.spoken}${bonus.spoken && bonus.text}`);
+            ? `Congratulations! You completed all levels.${bonusAnnouncement} New best score: ${formatScore(finalScore)}!`
+            : `Congratulations! You completed all levels with a total score of ${formatScore(finalScore)}.${bonusAnnouncement}`);
         return;
     }
 
@@ -99,7 +100,7 @@ export function handleLevelWin() {
     showBonus('levelBonus', bonus.text);
     if (nextLevelModal) nextLevelModal.classList.remove('hidden');
     if (confirmNextLevelBtn) confirmNextLevelBtn.classList.remove('hidden');
-    announce(`Level ${gameState.level} complete!${bonus.spoken}${bonus.spoken && bonus.text} Ready for the next challenge.`);
+    announce(`Level ${gameState.level} complete!${bonusAnnouncement} Ready for the next challenge.`);
 }
 
 export function handleLevelLose(restartContainer, restartBtn, nextLevelBtn) {

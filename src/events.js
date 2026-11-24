@@ -6,7 +6,7 @@
  * game board. Removes previous listeners by cloning each cell, then attaches
  * new listeners.
  * @param {HTMLElement} gameBoard - The game board container.
- * @param {number} boardSize - The size of the board (unused, for API compatibility).
+ * @param {number} boardSize - The board size, accepted for call-site symmetry; this function reads the cells from `gameBoard`.
  * @param {Function} onDragStart - Handler for dragstart.
  * @param {Function} onDrop - Handler for drop.
  * @param {Function} onTouchStart - Handler for touchstart.

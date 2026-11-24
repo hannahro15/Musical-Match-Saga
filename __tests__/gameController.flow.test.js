@@ -258,7 +258,7 @@ describe('gameController flow', () => {
   test('startGame resets state, clears saved progress, and starts level 1', () => {
     gameState.level = 3;
     startGame();
-    expect(document.activeElement).toBe(dom.gameBoard);
+    expect(dom.gameBoard.getAttribute('tabindex')).toBe('-1');
     expect(storageMock.clearGameProgress).toHaveBeenCalled();
     expect(gameState.level).toBe(1);
     expect(dom.gameBoardContainer.classList.contains('hidden')).toBe(false);

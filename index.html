@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="Musical Match Saga - A Music-Themed Match-3 Puzzle Game">
     <meta name="description" content="Musical Match Saga is a fun and engaging music-themed match-three puzzle game. Swap musical symbols to create matches, complete objectives, and advance through levels filled with musical challenges. Perfect for casual gamers and music lovers alike!">
@@ -102,7 +102,7 @@
 
         <!-- RESTART LEVEL MODAL -->
         <div id="restartLevelModal" class="modal hidden">
-            <div class="modal-content" style="text-align:center;">
+            <div class="modal-content centered">
                 <button id="closeRestartModal" class="close" aria-label="Close">&times;</button>
                 <h2>Restart Level?</h2>
                 <p>Are you sure you want to restart this level?</p>
@@ -113,7 +113,7 @@
 
         <!-- NEXT LEVEL MODAL -->
         <div id="nextLevelModal" class="modal hidden">
-            <div class="modal-content" style="text-align:center;">
+            <div class="modal-content centered">
                 <button id="closeNextLevelModal" class="close" aria-label="Close">&times;</button>
                 <h2>Level Complete!</h2>
                 <p>Congratulations! Ready for the next challenge?</p>
@@ -125,10 +125,10 @@
 
         <!-- GAME OVER MODAL -->
         <div id="gameOverModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gameOver">
-            <div class="modal-content" style="text-align:center;">
+            <div class="modal-content centered">
                 <h2 id="gameOver">Game Over</h2>
                 <p>You've run out of lives!</p>
-                <p id="gameOverFinalScore" style="font-size: 1.3em; font-weight: 600; color: #6c5ce7; margin: 15px 0;">Total Score: 0</p>
+                <p id="gameOverFinalScore" class="final-score">Total Score: 0</p>
                 <p id="gameOverNewBest" class="new-best hidden">New best score!</p>
                 <button id="gameOverPlayAgainBtn">Play Again</button>
                 <button id="gameOverHomeBtn">Home</button>
@@ -137,10 +137,10 @@
 
         <!-- CONGRATULATIONS MODAL -->
         <div id="congratsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="congrats">
-            <div class="modal-content" style="text-align:center;">
+            <div class="modal-content centered">
                 <h2>Congratulations!</h2>
                 <p>You have completed all levels of Musical Match Saga!</p>
-                <p id="congratsFinalScore" style="font-size: 1.3em; font-weight: 600; color: #6c5ce7; margin: 15px 0;">Total Score: 0</p>
+                <p id="congratsFinalScore" class="final-score">Total Score: 0</p>
                 <p id="congratsBonus" class="level-bonus"></p>
                 <p id="congratsNewBest" class="new-best hidden">New best score!</p>
                 <p>Would you like to play again or go back to the home screen?</p>
@@ -170,7 +170,7 @@
 
         <!-- CONFIRM HOME MODAL -->
         <div id="confirmHomeModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmHomeTitle">
-            <div class="modal-content" style="text-align:center;">
+            <div class="modal-content centered">
                 <button id="closeConfirmHomeModal" class="close" aria-label="Close">&times;</button>
                 <h2 id="confirmHomeTitle">Return to Home?</h2>
                 <p>Are you sure you want to save the game and return later?</p>
@@ -181,7 +181,7 @@
 
         <!-- CHANGED IN ANOTHER TAB MODAL -->
         <div id="otherTabModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="otherTabTitle">
-            <div class="modal-content" style="text-align:center;">
+            <div class="modal-content centered">
                 <h2 id="otherTabTitle">Game changed in another tab</h2>
                 <p>This game was changed in another tab.</p>
                 <button id="otherTabUseThisBtn">Use this tab</button>
@@ -190,7 +190,7 @@
         </div>
 
     </div>
-    <footer class="site-footer" style="text-align:center; padding:16px 0; color:#4a4a4a;">
+    <footer class="site-footer">
         <a href="privacy.html">Privacy Policy</a> · <a href="accessibility.html">Accessibility Statement</a>
     </footer>
     <div id="saveFailedNotice" class="save-failed-notice hidden" aria-hidden="true">Couldn't save your progress. Your browser may be blocking storage.</div>

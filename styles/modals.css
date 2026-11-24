@@ -219,3 +219,14 @@
   70% { transform: scale(1.15); opacity: 1; }
   100% { transform: scale(1); }
 }
+
+.modal-content.centered {
+  text-align: center;
+}
+
+.final-score {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #6c5ce7;
+  margin: 15px 0;
+}

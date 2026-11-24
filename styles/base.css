@@ -89,3 +89,8 @@ a:focus {
     }
 }
 
+.site-footer {
+  text-align: center;
+  padding: 16px 0;
+  color: #4a4a4a;
+}

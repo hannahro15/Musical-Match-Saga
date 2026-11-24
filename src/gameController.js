@@ -93,6 +93,12 @@ export function showMenu() {
 
   // Hide home button on menu
   hideElement(dom.homeBtn);
+
+  // The pressed menu button is gone; put focus on the new screen's heading.
+  if (dom.heading) {
+    dom.heading.setAttribute?.('tabindex', '-1');
+    dom.heading.focus?.();
+  }
 }
 
 export function showGameUI() {
@@ -121,6 +127,13 @@ export function showGameUI() {
   showElement(dom.homeBtn);
 
   hideElement(dom.restartLevelModal);
+
+  // The menu button is hidden now; move focus to the board so the game screen
+  // is announced and keyboard play can start from the first tile.
+  if (dom.gameBoard) {
+    dom.gameBoard.setAttribute?.('tabindex', '-1');
+    dom.gameBoard.focus?.();
+  }
 }
 
 export function showGameOver() {

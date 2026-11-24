@@ -99,7 +99,7 @@ The easiest way to play is the [live version][live]. To run it on your own compu
 
 ### Running the game
 
-The game is plain HTML, CSS and JavaScript, so there's no build step. Start a local web server from the project folder:
+The game is plain HTML, CSS and JavaScript, so there's no build step. Start a local web server from the project folder with `npm start`, or use any static server:
 
 ```bash
 npx serve .

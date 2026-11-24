@@ -1,11 +1,15 @@
 {
+  "name": "musical-match-saga",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
   "engines": {
     "node": "^24.0.0 || ^26.0.0"
   },
   "scripts": {
-    "test": "npx jest",
-    "test:coverage": "npx jest --coverage",
+    "start": "npx serve .",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint": "eslint ."
   },
   "devDependencies": {

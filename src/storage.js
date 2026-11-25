@@ -11,7 +11,8 @@ const TIMER_MODE_KEY = 'musicalMatchSaga.timerMode';
 function readStore() {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : {};
+    const parsed = data ? JSON.parse(data) : null;
+    return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
   } catch (e) {
     console.error('Error reading from localStorage:', e);
     return {};
@@ -42,14 +43,15 @@ export function canSave() {
 }
 
 export function getHighScore() {
-  return readStore().highScore || 0;
+  const score = readStore().highScore;
+  return isNumberAtLeastZero(score) ? score : 0;
 }
 
 export function saveHighScore(score) {
   const parsed = readStore();
 
   // Only update if new score is higher
-  if (score > (parsed.highScore || 0)) {
+  if (isNumberAtLeastZero(score) && score > (isNumberAtLeastZero(parsed.highScore) ? parsed.highScore : 0)) {
     parsed.highScore = score;
     return writeStore(parsed); // true indicates new high score
   }
@@ -57,14 +59,15 @@ export function saveHighScore(score) {
 }
 
 export function getHighestLevel() {
-  return readStore().highestLevel || 0;
+  const level = readStore().highestLevel;
+  return isNumberAtLeastZero(level) ? Math.min(level, LEVELS.length) : 0;
 }
 
 export function saveHighestLevel(level) {
   const parsed = readStore();
 
   // Only update if new level is higher
-  if (level > (parsed.highestLevel || 0)) {
+  if (isNumberAtLeastZero(level) && level > (isNumberAtLeastZero(parsed.highestLevel) ? parsed.highestLevel : 0)) {
     parsed.highestLevel = level;
     return writeStore(parsed);
   }

@@ -65,6 +65,21 @@ describe('storage.js', () => {
     expect(storedData.highestLevel).toBe(10);
   });    
 
+  test.each(['null', '"abc"', '5', '[]', '{"highScore":"abc","highestLevel":"abc"}', '{"highScore":-1,"highestLevel":-1}', '{"highScore":1e999,"highestLevel":1e999}'])('recovers from damaged stored data: %s', (stored) => {
+    localStorage.setItem('musicalMatchSaga', stored);
+    expect(getHighScore()).toBe(0);
+    expect(getHighestLevel()).toBe(0);
+    expect(saveHighScore(12)).toBe(true);
+    expect(saveHighestLevel(2)).toBe(true);
+    expect(getHighScore()).toBe(12);
+    expect(getHighestLevel()).toBe(2);
+  });
+
+  test('caps a stored highest level at the last playable level', () => {
+    localStorage.setItem('musicalMatchSaga', JSON.stringify({ highestLevel: LEVELS.length + 3 }));
+    expect(getHighestLevel()).toBe(LEVELS.length);
+  });
+
   test('getHighScore handles invalid JSON gracefully', () => {
     localStorage.setItem('musicalMatchSaga', 'invalid json');
     expect(getHighScore()).toBe(0);
